@@ -5,7 +5,7 @@ import win32con
 
 
 class HotKey(threading.Thread):  # 创建一个Thread.threading的扩展类
-    def __init__(self, roots, group=None, name=None,
+    def __init__(self, group=None, name=None,
                  args=(), kwargs=None, *, daemon=True):
         super().__init__(group=group, target=self.run, name=name,
                          args=args, kwargs=kwargs, daemon=daemon)
