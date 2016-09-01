@@ -1,21 +1,25 @@
+# coding: utf-8
 import os
+import inspect
 
-# 获取脚本文件的当前路径
-import sys
+__name__ = "api"
 
+class_arr = []
 
-def cur_file_dir():
-    # 获取脚本路径
-    path = sys.path[0]
-    # 判断为脚本文件还是py2exe编译后的文件，如果是脚本文件，则返回的是脚本的目录，如果是py2exe编译后的文件，则返回的是编译后的文件路径
-    if os.path.isdir(path):
-        return path
-    elif os.path.isfile(path):
-        return os.path.dirname(path)
+now_dir = inspect.stack()[0][1]
+now_dir = os.path.dirname(now_dir)
 
-
-files = os.listdir(cur_file_dir())
+files = os.listdir(now_dir)
 if files is not None:
     for file in files:
-        if os.path.splitext(file)[1] == ".py" and file != __name__:
-            print(file)
+        if os.path.splitext(file)[1] == ".py" and file != "__init__.py":
+            class_arr.append(os.path.splitext(file)[0])
+
+
+def run(class_name):
+    if class_name in class_arr:
+        module = __import__("api." + class_name, fromlist=class_name)
+        getattr(module, class_name)()
+        return True
+    else:
+        return False

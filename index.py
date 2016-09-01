@@ -1,19 +1,23 @@
 from tkinter import *
+from tkinter import messagebox
 import api
 
 
-def find_class():
-    print(lb.get(lb.curselection()))
+def find_class(event):
+    class_name = lb.get(lb.curselection())
+    if api.run(class_name) is False:
+        messagebox.askokcancel('敬请期待', '功能还在开发中，敬请期待')
 
 
-def load_class(event):
-    print("werw")
-
-top = Tk()
-lb = Listbox(top)
+app = Tk()
+app.title("工具箱")
+app.geometry("180x300")
+app.wm_attributes('-topmost', 1)
+lb = Listbox(app)
 with open("data/category") as file:
-    data = file.readline()
-    lb.insert(END, data)
-lb.bind("click", load_class)
+    lines = file.readlines()
+    for line in lines:
+        lb.insert(END, line.strip())
+lb.bind("<Double-Button-1>", find_class)
 lb.pack()
-top.mainloop()
+app.mainloop()
