@@ -47,5 +47,4 @@ class CookBook(object):
 
 if __name__ == '__main__':
     cb = CookBook()
-    cb.get_img_url("/cook/150802/6d4d8bee058f471ff8c8d307d433223b.jpg")
     cb.run()
