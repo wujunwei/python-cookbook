@@ -11,7 +11,7 @@ def find_class(event):
 
 app = Tk()
 app.title("工具箱")
-app.geometry("180x300")
+app.geometry("200x300")
 app.wm_attributes('-topmost', 1)
 lb = Listbox(app)
 with open("data/category") as file:
