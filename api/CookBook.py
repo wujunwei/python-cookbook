@@ -46,7 +46,8 @@ class CookBook(object):
             self.top_frame.pack(side=TOP)
             i = 0
             for (key, value) in self.__classify.items():
-                Radiobutton(self.top_frame, indicatoron=0, variable=self.selection, text=key, value=value, command=self.change_list).grid(row=0, column=i, sticky=W)
+                Radiobutton(self.top_frame, indicatoron=0, variable=self.selection, text=key, value=value,
+                            command=lambda: self.change_list(1)).grid(row=0, column=i, sticky=W)
                 i += 1
 
     def init_bottom(self):
@@ -55,10 +56,10 @@ class CookBook(object):
 
     def init_canvas(self, img=None):
         if self.canvas is None:
-            self.canvas = Canvas(self.root)
+            self.canvas = Canvas(self.root, bg="red")
         else:
             self.canvas.destroy()
-            self.canvas = Canvas(self.root)
+            self.canvas = Canvas(self.root, bg="red")
         if img is not None:
             img = self.get_img_url(img)
             image_bytes = urlopen(img).read()
@@ -66,7 +67,7 @@ class CookBook(object):
             pil_image = Image.open(data_stream)
             self.__image = ImageTk.PhotoImage(pil_image)
             self.canvas.create_image(100, 100, image=self.__image)
-            self.canvas.pack(side=RIGHT)
+        self.canvas.pack(side=RIGHT)
 
     def init_left(self):
         if self.left_frame is None:
@@ -78,7 +79,8 @@ class CookBook(object):
             self.left_frame.pack(side=LEFT)
         i = 0
         for var in self.__dataList:
-            Button(self.left_frame, bg="yellow", text=var['name'], command=lambda: self.init_canvas(), width=20).grid(row=i, column=0, sticky=W)
+            Button(self.left_frame, bg="yellow", text=var['name'], command=lambda: self.init_canvas(), width=20).grid(
+                row=i, column=0, sticky=W)
             i += 1
         if i != 0:
             Button(self.left_frame, bg="yellow", text="上一页", command=self.previous).grid(row=i, column=0, sticky=W)
@@ -94,7 +96,9 @@ class CookBook(object):
             self.__page = 1
         self.change_list()
 
-    def change_list(self):
+    def change_list(self, page=None):
+        if page is not None:
+            self.__page = 1
         json_data = self.get_list_json(self.selection.get(), self.__page)
         self.__dataList = json_data['tngou']
         self.init_left()
