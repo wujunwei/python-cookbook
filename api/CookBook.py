@@ -28,7 +28,7 @@ class CookBook(object):
         self.root = Tk()
         self.root.title("CookBook")
         self.root.resizable(True, True)
-        self.center_window(800, 700)
+        self.center_window(900, 750)
         # 初始化变量
         self.text = StringVar()
         self.selection = IntVar()
@@ -46,7 +46,7 @@ class CookBook(object):
     def init_top(self):
         if self.top_frame is None:
             self.top_frame = Frame(self.root)
-            self.top_frame.pack(side=TOP)
+            self.top_frame.grid(row=0, column=2, sticky=E+N)
             i = 0
             for (key, value) in self.__classify.items():
                 Radiobutton(self.top_frame, indicatoron=0, variable=self.selection, text=key, value=value, command=lambda: self.change_list(1)).grid(row=0, column=i, sticky=W)
@@ -55,8 +55,8 @@ class CookBook(object):
 
     def init_bottom(self):
         self.bottom_frame = Frame(self.root, bg="white")
-        self.bottom_frame.pack(side=BOTTOM)
-        Label(self.bottom_frame, wraplength=400, text='请选择', textvariable=self.text).pack(side=RIGHT)
+        Label(self.bottom_frame, wraplength=450, text='请选择', textvariable=self.text).pack(side=RIGHT)
+        self.bottom_frame.grid(row=10, column=3, sticky=S+W)
 
     def init_canvas(self, sel_id=None):
         if self.canvas is None:
@@ -80,16 +80,15 @@ class CookBook(object):
                 # self.canvas.create_text(300, 450, text=text, fill='blue')
             except Exception as e:
                 print(e)
-        self.canvas.pack(side=RIGHT)
+        self.canvas.grid(row=2, column=3)
 
     def init_left(self):
         if self.left_frame is None:
-            self.left_frame = Frame(self.root, bg="green", width=100, height=700)
-            self.left_frame.pack(side=LEFT)
+            self.left_frame = Frame(self.root)
         else:
             self.left_frame.pack_forget()
-            self.left_frame = Frame(self.root, bg="green", width=100, height=700)
-            self.left_frame.pack(side=LEFT)
+            self.left_frame = Frame(self.root)
+
         i = 0
         for var in self.__dataList:
             Radiobutton(self.left_frame, indicatoron=0, variable=self.sel, bg="yellow", text=var['name'], value=var['id'],
@@ -99,6 +98,7 @@ class CookBook(object):
         if i != 0:
             Button(self.left_frame, bg="yellow", text="上一页", command=self.previous).grid(row=i, column=0, sticky=W)
             Button(self.left_frame, bg="yellow", text="下一页", command=self.next).grid(row=i, column=1, sticky=E)
+        self.left_frame.grid(row=1, rowspan=i + 1, column=0)
 
     def next(self):
         self.__page += 1
