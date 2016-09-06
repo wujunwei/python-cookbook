@@ -1,10 +1,10 @@
-import string
+# -*- coding: utf-8 -*-
 from tkinter import *
-from urllib.request import urlopen
+from urllib import parse
+from urllib import request
 import re
 import pyperclip
 from bs4 import BeautifulSoup
-from urllib.parse import *
 
 
 def set_text(a_string):
@@ -14,7 +14,7 @@ data = {}
 
 
 def copy_url(event):
-    res = urlopen(data[lb.get(lb.curselection())])
+    res = request.urlopen(data[lb.get(lb.curselection())])
     bs = BeautifulSoup(res.read(), "lxml")
     magnet = bs.find("textarea").get_text()
     set_text(magnet.strip())
@@ -22,7 +22,8 @@ def copy_url(event):
 
 def search():
     data.clear()
-    html = urlopen(quote("http://www.zhizhu.so/q?kw=" + var.get(), safe=string.printable))
+    url = "http://www.zhizhu.so/q?kw=" + parse.quote(var.get(), safe=':/?=')
+    html = request.urlopen(url)
     bs = BeautifulSoup(html.read(), "lxml")
     items = bs.find_all("a", {"title": re.compile("^.*[^\s]+.*$"), "target": "_blank"})
     for item in items:
@@ -33,6 +34,7 @@ def search():
 
 root = Tk()
 root.geometry("500x400")
+root.title("搜索")
 root.resizable(False, False)
 var = StringVar()
 Entry(root, textvariable=var).pack(side=TOP)
