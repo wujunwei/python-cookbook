@@ -10,7 +10,12 @@ from bs4 import BeautifulSoup
 def set_text(a_string):
     pyperclip.copy(a_string)
 
+
 data = {}
+
+
+def clear_listbox():
+    lb.delete(0, lb.size())
 
 
 def copy_url(event):
@@ -22,16 +27,16 @@ def copy_url(event):
 
 def search():
     data.clear()
-    lb.delete(0, len(data))
+    clear_listbox()
     url = "http://www.zhizhu88.com/q?kw=" + parse.quote(var.get(), safe=':/?=')
     html = request.urlopen(url)
     bs = BeautifulSoup(html.read(), "lxml")
-    items = bs.find_all("a", {"href": re.compile("^bt/\w+.html$")})
+    items = bs.find_all("a", href=re.compile("^/bt/\w+\.html$"))
     for item in items:
         if 'href' in item.attrs:
-            p = re.compile('<[^>]+>')
-            lb.insert(END, p.sub("", item.attrs['title']))
-            data[p.sub("", item.attrs['title'])] = "http://www.zhizhu.so/"+item.attrs['href']
+            lb.insert(END, item.get_text())
+            data[item.get_text()] = "http://www.zhizhu88.com/" + item.attrs['href']
+
 
 root = Tk()
 root.geometry("500x400")
