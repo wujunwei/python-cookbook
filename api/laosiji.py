@@ -22,12 +22,13 @@ def copy_url(event):
 
 def search():
     data.clear()
-    url = "http://www.zhizhu.so/q?kw=" + parse.quote(var.get(), safe=':/?=')
+    lb.delete(0, len(data))
+    url = "http://www.zhizhu88.com/q?kw=" + parse.quote(var.get(), safe=':/?=')
     html = request.urlopen(url)
     bs = BeautifulSoup(html.read(), "lxml")
-    items = bs.find_all("a", {"title": re.compile("^.*[^\s]+.*$"), "target": "_blank"})
+    items = bs.find_all("a", {"href": re.compile("^bt/\w+.html$")})
     for item in items:
-        if 'title' in item.attrs:
+        if 'href' in item.attrs:
             p = re.compile('<[^>]+>')
             lb.insert(END, p.sub("", item.attrs['title']))
             data[p.sub("", item.attrs['title'])] = "http://www.zhizhu.so/"+item.attrs['href']
